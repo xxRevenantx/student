@@ -27,10 +27,13 @@ class DirectorResource extends Resource
 
     protected static ?string $modelLabel = 'Directores';
 
-
     protected static ?string $recordTitleAttribute = 'nombre';
 
     protected static int $globalSearchResultsLimit = 20;
+
+    protected static ?string $navigationGroup = 'Autoridades';
+
+
 
 
 
@@ -83,6 +86,12 @@ class DirectorResource extends Resource
                 ->icon('icon-excel')
         ])
             ->columns([
+
+            TextColumn::make('order')
+                ->label('Id')
+                ->searchable()
+                ->sortable(),
+
             TextColumn::make('nombre')
                 ->label('Director')
                 ->searchable()

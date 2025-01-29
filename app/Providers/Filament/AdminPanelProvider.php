@@ -45,7 +45,14 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+            // MENU PERSONALIZADO
             ->databaseNotifications()
+            ->navigationGroups([
+                'Usuarios',
+                'Autoridades',
+                'Niveles',
+            ])
+            ->sidebarCollapsibleOnDesktop()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
