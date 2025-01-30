@@ -30,7 +30,7 @@ class SupervisorResource extends Resource
 
     protected static ?string $modelLabel = 'Supervisores';
 
-    protected static ?string $navigationGroup = 'Autoridades';
+    protected static ?string $navigationGroup = 'AUTORIDADES';
 
 
     public static function form(Form $form): Form

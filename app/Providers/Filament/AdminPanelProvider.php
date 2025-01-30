@@ -48,9 +48,9 @@ class AdminPanelProvider extends PanelProvider
             // MENU PERSONALIZADO
             ->databaseNotifications()
             ->navigationGroups([
-                'Usuarios',
-                'Autoridades',
-                'Niveles',
+                'USUARIOS',
+                'AUTORIDADES',
+                'ACADÉMICA',
             ])
             ->sidebarCollapsibleOnDesktop()
             ->middleware([

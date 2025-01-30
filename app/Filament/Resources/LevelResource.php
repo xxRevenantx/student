@@ -27,7 +27,10 @@ use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\Layout\Split;
 
 use App\Filament\Exports\LevelExporter;
-
+use App\Filament\Resources\LevelResource\RelationManagers\DirectorRelationManager;
+use App\Models\Director;
+use App\Models\Supervisor;
+use Filament\Tables\Actions\ExportBulkAction;
 
 class LevelResource extends Resource
 {
@@ -38,7 +41,7 @@ class LevelResource extends Resource
 
     protected static ?string $modelLabel = 'Niveles';
 
-    protected static ?string $navigationGroup = 'Niveles';
+    protected static ?string $navigationGroup = 'ACADÉMICA';
 
     public static function form(Form $form): Form
     {
@@ -70,12 +73,21 @@ class LevelResource extends Resource
                     ->label('Color'),
                 Forms\Components\TextInput::make('cct')->placeholder('Ejemplo: 21DPR1234A')
                     ->label('C.C.T.'),
-                Select::make('director_id') -> placeholder('Selecciona un director')
+
+                    Select::make('director_id') -> placeholder('Selecciona un director')
                     ->label('Director')
-                    ->relationship('director', 'nombre'),
-                Select::make('supervisor_id')->placeholder('Selecciona un supervisor')
+                    ->relationship(
+                        name: 'director',
+                        modifyQueryUsing: fn (Builder $query) => $query->orderBy('apellido_paterno')->orderBy('apellido_materno'))
+                    ->getOptionLabelFromRecordUsing(fn (Director $record) => "{$record->nombre} {$record->apellido_paterno} {$record->apellido_materno} "),
+
+                    Select::make('supervisor_id') -> placeholder('Selecciona un supervisor')
                     ->label('Supervisor')
-                    ->relationship('supervisor', 'nombre'),
+                    ->relationship(
+                        name: 'supervisor',
+                        modifyQueryUsing: fn (Builder $query) => $query->orderBy('apellido_paterno')->orderBy('apellido_materno'))
+                    ->getOptionLabelFromRecordUsing(fn (Supervisor $record) => "{$record->nombre} {$record->apellido_paterno} {$record->apellido_materno} ")
+                    ,
                 ])->columns(2),
 
                     ])->columns(2);
@@ -107,16 +119,20 @@ class LevelResource extends Resource
                     ->sortable(),
                      TextColumn::make('cct', 'C.C.T.')
                     ->searchable()
+                    ->color('primary')
                     ->sortable(),
-                     TextColumn::make('director.nombre', 'Director')
+                     TextColumn::make('director', 'Director')
+                    ->formatStateUsing(fn ($state): string => is_object($state) ? "{$state->nombre} {$state->apellido_paterno} {$state->apellido_materno}" : ''),
+                    //  ->formatStateUsing(fn ($state): string => is_object($state) ? $state->nombre . ' ' . $state->apellido_paterno . ' ' . $state->apellido_materno : ''),
 
-                    ->searchable()
-                    ->sortable(),
-                     TextColumn::make('supervisor.nombre', 'Supervisor')
-                    ->searchable()
-                    ->sortable(),
+                    TextColumn::make('supervisor', 'Supervisor')
+                        ->formatStateUsing(fn ($state): string => is_object($state) ? $state->nombre . ' ' . $state->apellido_paterno . ' ' . $state->apellido_materno : ''),
+
+
 
             ])
+
+
             ->filters([
                 //
             ])
@@ -129,13 +145,18 @@ class LevelResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+
+                ExportBulkAction::make()
+                ->exporter(LevelExporter::class)
+                ->label('Exportar seleccionados')
+                ->icon('icon-excel')
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            DirectorRelationManager::class,
         ];
     }
 

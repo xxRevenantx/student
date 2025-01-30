@@ -31,7 +31,7 @@ class DirectorResource extends Resource
 
     protected static int $globalSearchResultsLimit = 20;
 
-    protected static ?string $navigationGroup = 'Autoridades';
+    protected static ?string $navigationGroup = 'AUTORIDADES';
 
 
 
