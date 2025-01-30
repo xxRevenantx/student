@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\GenerationExporter;
+use App\Filament\Imports\GenerationImporter;
 use App\Filament\Resources\GenerationResource\Pages;
 use App\Filament\Resources\GenerationResource\RelationManagers;
 use App\Models\Generation;
@@ -10,10 +12,14 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\Layout;
 
 class GenerationResource extends Resource
 {
@@ -30,20 +36,34 @@ class GenerationResource extends Resource
         return $form
             ->schema([
 
-                Forms\Components\TextInput::make('start_year')->placeholder('Año de inicio')
-                ->label('Año de inicio')
+                Forms\Components\TextInput::make('fecha_inicio')->placeholder('Fecha de inicio')
+                ->label('Fecha de inicio')
+                ->numeric()
                 ->rules('required')
+                ->unique(ignoreRecord: true) // IGNORAR EL CAMPO SI YA HA SIDO REGISTRADO
+                ->maxLength(4)
+                ->minValue(2000)
+                ->maxValue(3000)
+
+
                 ,
-                Forms\Components\TextInput::make('end_year')->placeholder('Año de término')
-                ->label('Año de término')
+
+                Forms\Components\TextInput::make('fecha_termino')->placeholder('Fecha de término')
+                ->label('Fecha de término')
+                ->numeric()
                 ->rules('required')
+                ->unique(ignoreRecord: true) // IGNORAR EL CAMPO SI YA HA SIDO REGISTRADO
+                ->maxLength(4)
+                ->minValue(2000)
+                ->maxValue(3000)
                 ,
+
+
+
 
                 Toggle::make('status')
                 ->label('Status')
-                ->default(1)
-
-                ,
+                ->default(1),
 
             ])->columns(2);
     }
@@ -51,24 +71,39 @@ class GenerationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->reorderable('order')
+        ->headerActions([
+            ImportAction::make()
+                ->importer(GenerationImporter::class)
+                ->icon('icon-excel'),
+            ExportAction::make()
+                ->exporter(GenerationExporter::class)
+                ->icon('icon-excel')
+                ->label('Exportar Generaciones'),
+        ])
             ->columns([
-                Tables\Columns\TextColumn::make('start_year')
+
+                Tables\Columns\TextColumn::make('order')
                     ->searchable()
                     ->sortable()
-                    ->label('Año de inicio')
-                    ,
-                Tables\Columns\TextColumn::make('end_year')
+                    ->label('ID'),
+
+                Tables\Columns\TextColumn::make('fecha_inicio')
                     ->searchable()
                     ->sortable()
-                    ->label('Año de término')
+                    ->label('Fecha de inicio'),
+                Tables\Columns\TextColumn::make('fecha_termino')
+                    ->searchable()
+                    ->sortable()
+                    ->label('Fecha de término')
                     ,
                     ToggleColumn::make('status')
                     ,
 
-            ])
+            ])->defaultSort('order')
             ->filters([
                 //
-            ])
+            ],  layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

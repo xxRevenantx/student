@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('generations', function (Blueprint $table) {
             $table->id();
-            $table->year('start_year');
-            $table->year('end_year');
+            $table->year('fecha_inicio');
+            $table->year('fecha_termino');
             $table->integer('status')->default(1);
+            $table->integer('order');
             $table->timestamps();
         });
     }

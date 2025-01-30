@@ -24,6 +24,12 @@ class Level extends Model
         return $this->belongsTo(Supervisor::class);
     }
 
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
+
+
 
     public function getRouteKeyName()
     {
