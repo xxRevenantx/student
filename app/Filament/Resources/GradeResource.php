@@ -59,30 +59,32 @@ class GradeResource extends Resource
                     ->numeric()
                     ->required(),
 
-
-                    Select::make('grupos')
-                        ->label('Grupos')
-                        ->placeholder('Agrega los grupos')
-                        ->options(
-                            \App\Models\Group::all()->pluck('grupo', 'grupo')->toArray()
-                        )
-                        ->multiple()
-                        ->preload()
-                        ->reactive()
-                        ->rules('required')
-                        ->required(),
-
-
-                ])->columns(3),
-
-
-                Forms\Components\Select::make('level_id')
+                    Forms\Components\Select::make('level_id')
                     ->relationship('level', 'level')
                     ->label('Nivel')
                     ->preload()
                     ->live()
                     ->rules('required')
                     ->required(),
+
+
+
+
+
+                ])->columns(3),
+
+                Select::make('grupos')
+                ->label('Grupos')
+                ->placeholder('Agrega los grupos')
+                ->options(
+                    \App\Models\Group::all()->pluck('grupo', 'grupo')->toArray()
+                )
+                ->multiple()
+                ->preload()
+                ->reactive()
+                ->rules('required')
+                ->required(),
+
 
                 Forms\Components\Select::make('generation_id')
                    ->options(

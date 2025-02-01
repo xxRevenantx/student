@@ -25,10 +25,11 @@ return new class extends Migration
             $table->string('foto')->nullable();
             $table->unsignedBigInteger('level_id');
             $table->unsignedBigInteger('grade_id');
-            $table->string('grupo')->default('A');
+            $table->json('grupo')->nullable();
             // $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('generation_id');
             $table->unsignedBigInteger('tutor_id')->nullable();
+            $table->integer('order');
 
 
             $table->foreign('level_id')->references('id')->on('levels');

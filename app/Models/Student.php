@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Observers\StudentObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy(StudentObserver::class)]
 class Student extends Model
 {
     use HasFactory;
@@ -25,7 +28,13 @@ class Student extends Model
         'grupo',
         'generation_id',
         'tutor_id',
+        'order'
     ];
+
+    protected $casts = [
+        'grupo' => 'array'
+    ];
+
 
     public function level()
     {

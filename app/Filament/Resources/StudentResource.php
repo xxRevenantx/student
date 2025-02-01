@@ -135,17 +135,34 @@ class StudentResource extends Resource
 
 
                 Section::make()->schema([
-                    Forms\Components\Select::make('grupos')
-                    ->label('Grupo')
-                    ->rule('required')
-                    ->options(
-                        fn (Get $get): Collection => \App\Models\Grade::query()
-                            ->where('id', $get('grade_id'))
-                            ->pluck('grupos', 'id')
-                    )
-                    ->reactive()
-                    ->preload()
-                    ->placeholder('Seleccione el grupo del alumno'),
+
+
+                    Forms\Components\Select::make('grupo')
+                        ->label('Grupo')
+                        ->rule('required')
+                        ->options(
+                            fn (Get $get): array => \App\Models\Grade::query()
+                                ->where('id', $get('grade_id'))
+                                ->pluck('grupos', 'grupos')
+                                ->toArray()
+                        )
+                        ->reactive()
+                        ->preload()
+                        ->placeholder('Seleccione el grupo del alumno')
+                        ->required(),
+
+
+                    // Forms\Components\Select::make('grupos')
+                    // ->label('Grupos')
+                    // ->options(
+                    //     \App\Models\Group::all()->pluck('grupo', 'grupo')->toArray()
+                    // )
+                    // ->multiple()
+                    // ->preload()
+                    // ->reactive()
+                    // ->rules('required')
+                    // ->required(),
+
 
                     Forms\Components\Select::make('generation_id')
                     // ->relationship('generation', 'fecha_inicio')
@@ -181,14 +198,18 @@ class StudentResource extends Resource
                 ->schema([
 
                     Forms\Components\Select::make('tutor_id')
-
-                    ->label('Tutor')
-                    ->relationship('tutor', 'nombre')
-                    ->placeholder('Seleccione el tutor del alumno'),
+                        ->label('Tutor')
+                        ->relationship('tutor', 'nombre', function ($query) {
+                            $query->selectRaw("CONCAT(nombre, ' ', apellidoP, ' ', apellidoM) as nombre_completo, id");
+                        })
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->nombre_completo)
+                        ->placeholder('Seleccione el tutor del alumno'),
 
 
                 Forms\Components\FileUpload::make('foto')
                     ->label('Foto')
+                    ->directory('imagenes')
+                    ->storeFileNamesIn('original_filename')
                     ->placeholder('Seleccione la foto del alumno'),
 
                     Toggle::make('status')
@@ -213,16 +234,15 @@ class StudentResource extends Resource
                     ->label('Matrícula')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('nombre')
-                    ->label('Nombre')
+                Tables\Columns\TextColumn::make('full_name')
+                    ->label('Nombre Completo')
+                    ->getStateUsing(function ($record) {
+                        return "{$record->nombre} {$record->apellidoP} {$record->apellidoM}";
+                    })
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('apellidoP')
-                    ->label('Apellido Paterno')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('apellidoM')
-                    ->label('Apellido Materno')
+                Tables\Columns\TextColumn::make('grupo')
+                    ->label('Grupo')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('edad')
@@ -233,21 +253,18 @@ class StudentResource extends Resource
                     ->label('Sexo')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\ToggleColumn::make('status')
                     ->label('Status')
-                    ->badge()
-                    ->colors([
-                        'success' => 1,
-                        'danger' => 0,
-                    ])
-                    ->searchable()
+
                     ->sortable(),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
