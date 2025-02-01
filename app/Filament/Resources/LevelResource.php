@@ -31,6 +31,7 @@ use App\Filament\Resources\LevelResource\RelationManagers\DirectorRelationManage
 use App\Models\Director;
 use App\Models\Supervisor;
 use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Tables\Columns\ColorColumn;
 
 class LevelResource extends Resource
 {
@@ -41,7 +42,9 @@ class LevelResource extends Resource
 
     protected static ?string $modelLabel = 'Niveles';
 
-    protected static ?string $navigationGroup = 'ACADÉMICA';
+    protected static ?string $navigationGroup = 'ESTRUCTURA ACADÉMICA';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -114,7 +117,7 @@ class LevelResource extends Resource
                      TextColumn::make("slug",'Ruta')
                     ->searchable()
                     ->sortable(),
-                     TextColumn::make('color','Color')
+                     ColorColumn::make('color','Color')
                     ->searchable()
                     ->sortable(),
                      TextColumn::make('cct', 'C.C.T.')

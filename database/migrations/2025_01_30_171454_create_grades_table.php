@@ -17,11 +17,10 @@ return new class extends Migration
             $table->string('grado_numero');
             $table->unsignedBigInteger('level_id')->nullable();
             $table->unsignedBigInteger('generation_id')->nullable();
+            $table->json('grupos')->nullable();
+            $table->integer('order');
 
-            $table->foreign('level_id')
-                  ->references('id')
-                  ->on('levels')
-                  ->onDelete('set null');
+            $table->foreign('level_id')->references('id') ->on('levels')->onDelete('set null');
 
             $table->foreign('generation_id')->references('id')->on('generations')->onDelete('set null');
 

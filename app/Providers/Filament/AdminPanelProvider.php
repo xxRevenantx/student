@@ -50,7 +50,8 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'USUARIOS',
                 'AUTORIDADES',
-                'ACADÉMICA',
+                'ESTRUCTURA ACADÉMICA',
+                'GESTIÓN ACADÉMICA',
             ])
             ->sidebarCollapsibleOnDesktop()
             ->middleware([

@@ -8,9 +8,11 @@ use App\Filament\Resources\GenerationResource\Pages;
 use App\Filament\Resources\GenerationResource\RelationManagers;
 use App\Models\Generation;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ImportAction;
@@ -29,7 +31,9 @@ class GenerationResource extends Resource
 
     protected static ?string $modelLabel = 'Generaciones';
 
-    protected static ?string $navigationGroup = 'ACADÉMICA';
+    protected static ?string $navigationGroup = 'ESTRUCTURA ACADÉMICA';
+
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
@@ -40,26 +44,23 @@ class GenerationResource extends Resource
                 ->label('Fecha de inicio')
                 ->numeric()
                 ->rules('required')
-                ->unique(ignoreRecord: true) // IGNORAR EL CAMPO SI YA HA SIDO REGISTRADO
                 ->maxLength(4)
                 ->minValue(2000)
-                ->maxValue(3000)
-
-
-                ,
+                ->maxValue(3000),
 
                 Forms\Components\TextInput::make('fecha_termino')->placeholder('Fecha de término')
                 ->label('Fecha de término')
                 ->numeric()
                 ->rules('required')
-                ->unique(ignoreRecord: true) // IGNORAR EL CAMPO SI YA HA SIDO REGISTRADO
                 ->maxLength(4)
                 ->minValue(2000)
-                ->maxValue(3000)
-                ,
+                ->maxValue(3000),
 
-
-
+                Forms\Components\Select::make('level_id')
+                    ->relationship('level', 'level')
+                    ->label('Nivel')
+                    ->rules('required')
+                    ->placeholder('Seleccione un nivel'),
 
                 Toggle::make('status')
                 ->label('Status')
@@ -88,6 +89,13 @@ class GenerationResource extends Resource
                     ->sortable()
                     ->label('ID'),
 
+                    Tables\Columns\TextColumn::make('level.level')
+                    ->badge()
+                    ->color(function ($record) { return Color::hex($record->level->color); })
+                    ->searchable()
+                    ->sortable()
+                    ->label('Nivel'),
+
                 Tables\Columns\TextColumn::make('fecha_inicio')
                     ->searchable()
                     ->sortable()
@@ -95,10 +103,11 @@ class GenerationResource extends Resource
                 Tables\Columns\TextColumn::make('fecha_termino')
                     ->searchable()
                     ->sortable()
-                    ->label('Fecha de término')
-                    ,
-                    ToggleColumn::make('status')
-                    ,
+                    ->label('Fecha de término'),
+
+
+
+                    ToggleColumn::make('status'),
 
             ])->defaultSort('order')
             ->filters([

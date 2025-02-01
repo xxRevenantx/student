@@ -17,12 +17,23 @@ class Generation extends Model
         'fecha_inicio',
         'fecha_termino',
         'status',
+        'level_id',
         'order'
     ];
 
     public function grades()
     {
         return $this->hasMany(Grade::class);
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
     }
 
 }

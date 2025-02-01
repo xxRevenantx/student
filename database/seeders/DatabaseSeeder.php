@@ -30,10 +30,11 @@ class DatabaseSeeder extends Seeder
         Director::factory(5)->create();
         Supervisor::factory(5)->create();
 
-        $this->call(
+        $this->call([
             LevelSeeder::class,
-            GenerationSeeder::class,
-        );
+            // GenerationSeeder::class,
+            TutorSeeder::class,
+        ]);
 
 
     }

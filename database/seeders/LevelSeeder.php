@@ -20,7 +20,7 @@ class LevelSeeder extends Seeder
                     [
                         'level' => 'Preescolar',
                         'slug' => Str::slug('Preescolar'),
-                        'color' => '#FF0000',
+                        'color' => '#a8f200',
                         'cct' => '21DPR0001E',
                         'director_id' => Director::all()->random()->id,
                         'supervisor_id' => Supervisor::all()->random()->id,
@@ -29,7 +29,7 @@ class LevelSeeder extends Seeder
                     [
                         'level' => 'Primaria',
                         'slug' => Str::slug('Primaria'),
-                        'color' => '#FF0000',
+                        'color' => '#007af2',
                         'cct' => '21DPR0001E',
                         'director_id' => Director::all()->random()->id,
                         'supervisor_id' => Supervisor::all()->random()->id,
@@ -38,7 +38,7 @@ class LevelSeeder extends Seeder
                     [
                         'level' => 'Secundaria',
                         'slug' => Str::slug('Secundaria'),
-                        'color' => '#FF0000',
+                        'color' => '#f200e5',
                         'cct' => '21DPR0001E',
                         'director_id' => Director::all()->random()->id,
                         'supervisor_id' => Supervisor::all()->random()->id,

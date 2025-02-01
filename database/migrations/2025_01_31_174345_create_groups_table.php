@@ -11,18 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('generations', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->year('fecha_inicio');
-            $table->year('fecha_termino');
-            $table->integer('status')->default(1);
-            $table->unsignedBigInteger('level_id')->nullable();
+            $table->string('grupo');
             $table->integer('order');
             $table->timestamps();
-
-            $table->foreign('level_id')->references('id')->on('levels')->onDelete('set null');
-
-
         });
     }
 
@@ -31,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('generations');
+        Schema::dropIfExists('groups');
     }
 };

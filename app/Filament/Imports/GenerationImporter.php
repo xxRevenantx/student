@@ -24,6 +24,10 @@ class GenerationImporter extends Importer
                 ->requiredMapping()
                 ->numeric()
                 ->rules(['required', 'integer']),
+            ImportColumn::make('level_id')
+                ->requiredMapping()
+                ->numeric()
+                ->rules(['required', 'integer']),
             ImportColumn::make('order')
                 ->numeric()
                 ->rules(['integer']),

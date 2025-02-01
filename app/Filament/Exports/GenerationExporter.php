@@ -14,11 +14,13 @@ class GenerationExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('order')
+            ExportColumn::make('id')
                 ->label('ID'),
             ExportColumn::make('fecha_inicio'),
             ExportColumn::make('fecha_termino'),
             ExportColumn::make('status'),
+            ExportColumn::make('level_id'),
+            ExportColumn::make('order'),
             ExportColumn::make('created_at'),
             ExportColumn::make('updated_at'),
         ];

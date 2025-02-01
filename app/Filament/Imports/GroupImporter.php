@@ -2,51 +2,41 @@
 
 namespace App\Filament\Imports;
 
-use App\Models\Grade;
+use App\Models\Group;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
 
-class GradeImporter extends Importer
+class GroupImporter extends Importer
 {
-    protected static ?string $model = Grade::class;
+    protected static ?string $model = Group::class;
 
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make('grado')
+            ImportColumn::make('grupo')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
-            ImportColumn::make('grado_numero')
-                ->requiredMapping()
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('level_id')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('generation_id')
-                ->numeric()
-                ->rules(['integer']),
             ImportColumn::make('order')
+                ->requiredMapping()
                 ->numeric()
-                ->rules(['integer']),
-
-
+                ->rules(['required', 'integer']),
         ];
     }
 
-    public function resolveRecord(): ?Grade
+    public function resolveRecord(): ?Group
     {
-        // return Grade::firstOrNew([
+        // return Group::firstOrNew([
         //     // Update existing records, matching them by `$this->data['column_name']`
         //     'email' => $this->data['email'],
         // ]);
 
-        return new Grade();
+        return new Group();
     }
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your grade import has completed and ' . number_format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = 'Your group import has completed and ' . number_format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
             $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';

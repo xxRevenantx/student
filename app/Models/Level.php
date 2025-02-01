@@ -29,6 +29,16 @@ class Level extends Model
         return $this->hasMany(Grade::class);
     }
 
+    public function generations()
+    {
+        return $this->hasMany(Generation::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
 
 
     public function getRouteKeyName()
