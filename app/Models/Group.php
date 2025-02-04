@@ -19,8 +19,11 @@ class Group extends Model
         return $this->hasMany(Grade::class);
     }
 
-
-
+    public function preescolar()
+    {
+        return $this->hasMany(Preescolar::class);
+    }
+    
 
     public function students()
     {

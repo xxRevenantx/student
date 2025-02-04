@@ -15,11 +15,11 @@ use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Enums\FiltersLayout;
-
+use Filament\Tables\Table;
 
 
 class SupervisorResource extends Resource
@@ -114,9 +114,20 @@ class SupervisorResource extends Resource
 
             ])
             ->filters([
+                SelectFilter::make('order')
+                    ->label('Buscar por')
+                    ->options([
+                        'nombre' => 'Nombre',
+                        'apellido_paterno' => 'Apellido Paterno',
+                        'apellido_materno' => 'Apellido Materno',
+                        'email' => 'Email',
+                        'telefono' => 'Telefono',
+                        'zona' => 'Zona',
+                        'sector' => 'Sector',
+                    ])
 
 
-            ],  layout: FiltersLayout::AboveContent)
+                ], layout:FiltersLayout::AboveContent)
 
             ->actions([
                 Tables\Actions\ViewAction::make(),

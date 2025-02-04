@@ -27,9 +27,10 @@ class StudentExporter extends Exporter
             ExportColumn::make('status'),
             ExportColumn::make('level_id'),
             ExportColumn::make('grade_id'),
-            ExportColumn::make('group_id'),
+            ExportColumn::make('grupo'),
             ExportColumn::make('generation_id'),
             ExportColumn::make('tutor_id'),
+            ExportColumn::make('order'),
             ExportColumn::make('created_at'),
             ExportColumn::make('updated_at'),
         ];

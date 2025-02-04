@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\StudentExporter;
+use App\Filament\Imports\StudentImporter;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
@@ -12,10 +14,15 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+
 
 class StudentResource extends Resource
 {
@@ -225,13 +232,27 @@ class StudentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->reorderable('order')
+        ->headerActions([
+            ImportAction::make()
+                ->importer(StudentImporter::class)
+                ->icon('icon-excel')
+                ->label('Importar Estudiantes'),
+            ExportAction::make()
+                ->exporter(StudentExporter::class)
+                ->icon('icon-excel')
+                ->label('Exportar Estudiantes'),
+        ])
             ->columns([
+
+                Tables\Columns\TextColumn::make('matricula')
+                ->label('Matrícula')
+                ->searchable()
+                ->sortable(),
+
+
                 Tables\Columns\TextColumn::make('curp')
                     ->label('CURP')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('matricula')
-                    ->label('Matrícula')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('full_name')
@@ -241,26 +262,57 @@ class StudentResource extends Resource
                     })
                     ->searchable()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('level.level')
+                    ->label('Nivel')
+                    ->searchable()
+                    ->alignCenter()
+                    ->sortable(),
+                
+                Tables\Columns\TextColumn::make('grade.grado_numero')
+                    ->label('Grado')
+                    ->searchable()
+                    ->alignCenter()
+                    ->sortable(),
+                
+
                 Tables\Columns\TextColumn::make('grupo')
                     ->label('Grupo')
                     ->searchable()
+                    ->alignCenter()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('edad')
                     ->label('Edad')
                     ->searchable()
+                    ->alignCenter()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sexo')
                     ->label('Sexo')
                     ->searchable()
+                    ->alignCenter()
                     ->sortable(),
                 Tables\Columns\ToggleColumn::make('status')
+                ->alignCenter()
                     ->label('Status')
 
                     ->sortable(),
             ])
             ->filters([
+        
+           
 
-            ])
+                     SelectFilter::make('level_id')
+                    ->label('Selecciona el nivel')
+                    ->relationship('level', 'level'),
+
+                     SelectFilter::make('grade_id')
+                    ->label('Selecciona el grado')
+                    ->relationship('grade', 'grado_numero')
+
+
+
+
+            ],layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

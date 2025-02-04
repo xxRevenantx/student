@@ -39,6 +39,13 @@ class Level extends Model
         return $this->hasMany(Student::class);
     }
 
+    public function preescolar()
+    {
+        return $this->hasOne(Preescolar::class);
+    }
+
+
+
 
 
     public function getRouteKeyName()

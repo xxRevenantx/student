@@ -118,17 +118,6 @@ class DirectorResource extends Resource
             ])
             ->filters([
 
-                SelectFilter::make('order')
-                    ->label('Buscar por')
-                    ->options([
-                        'nombre' => 'Nombre',
-                        'apellido_paterno' => 'Apellido Paterno',
-                        'apellido_materno' => 'Apellido Materno',
-                        'email' => 'Correo Electrónico',
-                        'telefono' => 'Teléfono',
-                    ])->searchable(),
-
-
 
             ])
             ->actions([
